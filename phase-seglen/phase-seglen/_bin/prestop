@@ -1,0 +1,77 @@
+#!/bin/bash
+HOME_DIR="/home/ubuntu"
+
+# CW1
+if [ -f "$HOME_DIR/results/seglen_snr.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/seglen_snr.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 5 ]; then
+        echo "CW1_CSV_OK"
+    fi
+fi
+
+# CW2
+if [ -f "$HOME_DIR/results/spec_formula.txt" ]; then
+    total=$(grep -c "match:" "$HOME_DIR/results/spec_formula.txt" 2>/dev/null || echo 0)
+    pass=$(grep -c "match:True" "$HOME_DIR/results/spec_formula.txt" 2>/dev/null || echo 0)
+    if [ "$total" -ge 2 ] && [ "$total" -eq "$pass" ]; then
+        echo "CW2_FORMULA_OK"
+    fi
+fi
+
+# CW3
+if [ -f "$HOME_DIR/results/min_seglen.txt" ]; then
+    if grep -q "min_seg_len:" "$HOME_DIR/results/min_seglen.txt"; then
+        echo "CW3_MIN_OK"
+    fi
+fi
+
+# CW4
+if [ -f "$HOME_DIR/results/capacity.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/capacity.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 5 ]; then
+        echo "CW4_CAP_OK"
+    fi
+fi
+
+# CW5
+if [ -f "$HOME_DIR/results/timing.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/timing.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 5 ]; then
+        echo "CW5_TIME_OK"
+    fi
+fi
+
+# CW6
+for f in seglen_music.csv seglen_speech.csv seglen_noise.csv; do
+    if [ -f "$HOME_DIR/results/$f" ]; then
+        count=$(tail -n +2 "$HOME_DIR/results/$f" | grep -c "," 2>/dev/null || echo 0)
+        if [ "$count" -ge 5 ]; then
+            case $f in
+                seglen_music.csv) echo "CW6_MUSIC_OK" ;;
+                seglen_speech.csv) echo "CW6_SPEECH_OK" ;;
+                seglen_noise.csv) echo "CW6_NOISE_OK" ;;
+            esac
+        fi
+    fi
+done
+
+# CW7
+if [ -f "$HOME_DIR/results/seglen_summary.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/seglen_summary.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 5 ]; then
+        echo "CW7_SUMMARY_OK"
+    fi
+fi
+if [ -f "$HOME_DIR/results/optimal_seglen.txt" ]; then
+    if grep -q "optimal:" "$HOME_DIR/results/optimal_seglen.txt"; then
+        echo "CW7_OPTIMAL_OK"
+    fi
+fi
+
+# CW8
+if [ -f "$HOME_DIR/results/seglen_plot.png" ]; then
+    size=$(stat -c%s "$HOME_DIR/results/seglen_plot.png" 2>/dev/null || echo 0)
+    if [ "$size" -gt 10000 ]; then
+        echo "CW8_PLOT_OK"
+    fi
+fi

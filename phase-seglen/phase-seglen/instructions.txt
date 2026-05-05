@@ -1,0 +1,102 @@
+=================================================================
+  LAB 6: KHẢO SÁT SEGMENT LENGTH
+=================================================================
+
+Mục tiêu: Khảo sát seg_len ảnh hưởng thế nào đến SNR, capacity,
+thời gian, và decode accuracy.
+
+Thư viện có sẵn: encoder_lib.py (import encoder_lib)
+  encoder_lib.encode(wav, msg, seg_len=, start_bin=)
+  encoder_lib.decode(wav, num_chars, seg_len=, start_bin=)
+  encoder_lib.save_wav(output, fs, path, dtype)
+
+Kiểm tra: gõ "checkwork"
+
+-----------------------------------------------------------------
+CW1: Sweep seg_len trên music.wav
+-----------------------------------------------------------------
+seg_len ∈ {128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768}
+message = "SECRET", start_bin = 256
+
+Mỗi seg_len: encode → save int16 → decode → ghi kết quả.
+Nếu encode trả error (msg_too_long hoặc audio_too_short), ghi decode_ok:error
+
+Ghi results/seglen_snr.csv:
+  seg_len,snr,spec_mod_pct,decode_ok
+  128,<>,<>,<>
+  256,<>,<>,<>
+  ...
+
+-----------------------------------------------------------------
+CW2: Tính % phổ bị sửa
+-----------------------------------------------------------------
+Verify giá trị spec_mod_pct trong CSV bằng công thức:
+  spec_mod = msg_bits / (seg_len / 2) * 100
+
+Ghi results/spec_formula.txt:
+  seg_len:128 formula_pct:<> csv_pct:<> match:<True/False>
+  seg_len:4096 formula_pct:<> csv_pct:<> match:<True/False>
+
+Cả 2 match phải True (sai lệch < 0.01%)
+
+-----------------------------------------------------------------
+CW3: Tìm seg_len nhỏ nhất decode đúng
+-----------------------------------------------------------------
+Từ CSV ở CW1, tìm seg_len nhỏ nhất mà decode_ok=True.
+
+Ghi results/min_seglen.txt:
+  min_seg_len:<số>
+
+-----------------------------------------------------------------
+CW4: Tính capacity mỗi seg_len
+-----------------------------------------------------------------
+capacity = (seg_len/2 - start_bin - 1) / 8  (ký tự, làm tròn xuống)
+
+Ghi results/capacity.csv:
+  seg_len,max_chars
+  128,<>
+  256,<>
+  ...
+
+-----------------------------------------------------------------
+CW5: Đo thời gian encode
+-----------------------------------------------------------------
+Mỗi seg_len: encode 5 lần, tính trung bình thời gian.
+
+Ghi results/timing.csv:
+  seg_len,avg_encode_ms
+  128,<>
+  ...
+
+-----------------------------------------------------------------
+CW6: Lặp lại trên 3 loại audio
+-----------------------------------------------------------------
+Sweep seg_len trên music.wav, speech.wav, noise.wav.
+
+Ghi results/seglen_music.csv, results/seglen_speech.csv,
+results/seglen_noise.csv (cùng format CW1)
+
+-----------------------------------------------------------------
+CW7: Tính mean SNR ± std theo seg_len
+-----------------------------------------------------------------
+Từ 3 CSV ở CW6, tính mean SNR và std cho mỗi seg_len trên 3 file.
+
+Ghi results/seglen_summary.csv:
+  seg_len,mean_snr,std_snr
+  128,<>,<>
+  ...
+
+Xác định seg_len tối ưu (SNR cao nhất mà decode đúng cả 3 file).
+
+Ghi results/optimal_seglen.txt:
+  optimal:<số>
+
+-----------------------------------------------------------------
+CW8: Biểu đồ SNR vs seg_len
+-----------------------------------------------------------------
+Vẽ đồ thị: trục X = seg_len (log scale), trục Y = SNR.
+3 đường cho 3 loại audio, legend rõ ràng.
+
+Lưu results/seglen_plot.png
+
+=================================================================
