@@ -1,0 +1,59 @@
+#!/bin/bash
+# IMPORTANT: hardcode path, do NOT use $USER (runs as root)
+HOME_DIR="/home/student"
+
+# CW1: freq_map.csv >= 8 dong
+if [ -f "$HOME_DIR/results/freq_map.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/freq_map.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 8 ]; then echo "CW1_FREQ_OK"; fi
+fi
+
+# CW2: startbin.csv >= 8 dong
+if [ -f "$HOME_DIR/results/startbin.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/startbin.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 8 ]; then echo "CW2_SWEEP_OK"; fi
+fi
+
+# CW3: embed_amp.csv >= 8 dong
+if [ -f "$HOME_DIR/results/embed_amp.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/embed_amp.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 8 ]; then echo "CW3_AMP_OK"; fi
+fi
+
+# CW4: lowamp_test.txt contains with_boost:True
+if [ -f "$HOME_DIR/results/lowamp_test.txt" ]; then
+    if grep -q "with_boost:True" "$HOME_DIR/results/lowamp_test.txt"; then
+        echo "CW4_BOOST_OK"
+    fi
+fi
+
+# CW5: startbin_speech.csv >= 8 dong + speech_diff.txt exists
+if [ -f "$HOME_DIR/results/startbin_speech.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/startbin_speech.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 8 ]; then echo "CW5_SPEECH_OK"; fi
+fi
+if [ -f "$HOME_DIR/results/speech_diff.txt" ]; then
+    if grep -q "differ_at_bin:" "$HOME_DIR/results/speech_diff.txt"; then
+        echo "CW5_DIFF_OK"
+    fi
+fi
+
+# CW6: safe_zone.txt contains min_safe_bin and freq
+if [ -f "$HOME_DIR/results/safe_zone.txt" ]; then
+    if grep -q "min_safe_bin:" "$HOME_DIR/results/safe_zone.txt" && grep -q "freq:" "$HOME_DIR/results/safe_zone.txt"; then
+        echo "CW6_SAFE_OK"
+    fi
+fi
+
+# CW7: nyquist_test.txt contains decode_ok
+if [ -f "$HOME_DIR/results/nyquist_test.txt" ]; then
+    if grep -q "decode_ok:" "$HOME_DIR/results/nyquist_test.txt"; then
+        echo "CW7_NYQUIST_OK"
+    fi
+fi
+
+# CW8: freq_plot.png > 10KB
+if [ -f "$HOME_DIR/results/freq_plot.png" ]; then
+    size=$(stat -c%s "$HOME_DIR/results/freq_plot.png" 2>/dev/null || echo 0)
+    if [ "$size" -gt 10000 ]; then echo "CW8_PLOT_OK"; fi
+fi

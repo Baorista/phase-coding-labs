@@ -1,0 +1,83 @@
+=================================================================
+  LAB 7: KHẢO SÁT START BIN & VÙNG TẦN SỐ
+=================================================================
+
+Biến: start_bin ∈ {10, 50, 100, 256, 500, 800, 1000, 1500}
+Cố định: seg_len=4096, message="SECRET"
+Công thức: freq_hz = start_bin * sample_rate / seg_len
+
+-----------------------------------------------------------------
+CW1: Mapping bin → Hz
+-----------------------------------------------------------------
+Ghi results/freq_map.csv:
+  start_bin,freq_hz
+  10,<>
+  50,<>
+  ...
+
+-----------------------------------------------------------------
+CW2: Sweep start_bin — SNR + decode + confidence
+-----------------------------------------------------------------
+Ghi results/startbin.csv:
+  start_bin,freq_hz,snr,decode_ok,avg_conf
+
+-----------------------------------------------------------------
+CW3: Kiểm tra biên độ FFT tại vùng embedding
+-----------------------------------------------------------------
+Với mỗi start_bin: FFT audio, tính biên độ trung bình tại
+vùng embedding (start_bin → start_bin+48).
+
+Ghi results/embed_amp.csv:
+  start_bin,mean_amp,min_amp,max_amp
+
+Xác định bin nào có mean_amp < 100.
+
+-----------------------------------------------------------------
+CW4: Test biên độ thấp + MIN_AMP
+-----------------------------------------------------------------
+Với start_bin có mean_amp < 100 (từ CW3):
+encode KHÔNG boost (MIN_AMP=0) → decode_ok?
+encode CÓ boost (MIN_AMP=200) → decode_ok?
+
+Ghi results/lowamp_test.txt:
+  start_bin:<> without_boost:<True/False> with_boost:<True/False>
+
+-----------------------------------------------------------------
+CW5: Lặp lại trên speech.wav
+-----------------------------------------------------------------
+Ghi results/startbin_speech.csv (cùng format CW2)
+
+So sánh: bin nào speech cho kết quả khác music?
+
+Ghi results/speech_diff.txt:
+  differ_at_bin:<danh_sách_bin>
+
+-----------------------------------------------------------------
+CW6: Tìm "vùng an toàn"
+-----------------------------------------------------------------
+Vùng an toàn = start_bin mà:
+  decode_ok=True VÀ freq > 12000 Hz
+
+Ghi results/safe_zone.txt:
+  min_safe_bin:<> freq:<>Hz
+  max_safe_bin:<> freq:<>Hz
+
+-----------------------------------------------------------------
+CW7: Test sát biên Nyquist
+-----------------------------------------------------------------
+start_bin = seg_len/2 - msg_bits - 1 (sát Nyquist)
+Encode + decode.
+
+Ghi results/nyquist_test.txt:
+  start_bin:<> freq:<>Hz decode_ok:<> explanation:<1_dòng>
+
+-----------------------------------------------------------------
+CW8: Biểu đồ freq vs SNR
+-----------------------------------------------------------------
+Trục X = freq_hz, trục Y = SNR.
+Đánh dấu 'x' đỏ tại điểm decode_ok=False.
+Vẽ vùng "safe zone" bằng highlight xanh.
+
+Lưu results/freq_plot.png
+
+=================================================================
